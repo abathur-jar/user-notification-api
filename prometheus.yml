@@ -1,0 +1,25 @@
+global:
+  scrape_interval: 5s
+
+scrape_configs:
+  - job_name: 'user-service'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['host.docker.internal:8080']  # Адрес твоего user-service
+        labels:
+          application: 'User Service Application'
+
+  - job_name: 'notification-service'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['host.docker.internal:8081']  # Адрес твоего notification-service
+        labels:
+          application: 'Notification Service Application'
+
+  - job_name: 'security-service'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['host.docker.internal:8089']  # Адрес твоего notification-service
+        labels:
+          application: 'Notification Service Application'
+

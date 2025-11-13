@@ -1,0 +1,36 @@
+# 1. Server
+server:
+  port: 8089
+
+# 2. Spring
+spring:
+  # 2.1 Database
+  datasource:
+    url: jdbc:postgresql://localhost:5432/userdb
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  # 2.2 Jpa
+  jpa:
+    hibernate:
+      ddl-auto: update
+      show-sql: true
+  # 2.3 Jackson (JSON)
+  jackson:
+    deserialization:
+      fail-on-unknown-properties: true
+
+# 3. Management (Actuator)
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, prometheus
+  endpoint:
+    health:
+      show-details: always
+
+# 4. Security JWT
+security:
+  jjwt: af80e81a361ed155f4334ba3903fd952cfa2018a13158e45b42612e19af67511
+

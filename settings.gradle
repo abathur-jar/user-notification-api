@@ -1,0 +1,9 @@
+rootProject.name = 'notification-user-api'
+
+include 'user-service'
+include 'notification-service'
+include 'external-config'
+include 'eureka-service'
+include 'security-service'
+include 'api-gateway'
+include 'user-auth-service'
