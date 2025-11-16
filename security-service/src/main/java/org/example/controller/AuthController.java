@@ -33,7 +33,7 @@ public class AuthController {
     }
 
 
-    @PostMapping
+    @PostMapping("/validate")
     public boolean validateToken(@Valid @RequestParam String token) {
         try {
             service.validateToken(token);

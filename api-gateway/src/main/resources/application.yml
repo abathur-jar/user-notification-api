@@ -19,10 +19,9 @@ spring:
         webflux:
           routes:
             - id: security-service
-              # uri: http://localhost:8089
-              uri: lb://SECURITY-SERVICE
+              uri: http://localhost:8089
+#              uri: lb://SECURITY-SERVICE
               predicates:
                 - Path=/auth/**
-              filters:
-                - AuthFilter
+
 
