@@ -4,10 +4,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.example.util.JwtService;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cloud.gateway.filter.GatewayFilter;
-import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -23,7 +20,7 @@ import java.io.IOException;
 @Service
 public class AuthFilter extends OncePerRequestFilter {
 
-    @Value("${security.service.url:http://localhost:8084}")
+    @Value("${security.service.url:http://localhost:8089}")
     private String securityServiceUrl;
 
     private final RestTemplate restTemplate = new RestTemplate();
@@ -32,6 +29,7 @@ public class AuthFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         String path = request.getRequestURI();
+
         if (path.startsWith("/auth/register") || path.startsWith("/auth/login")) {
             filterChain.doFilter(request, response);
             return;

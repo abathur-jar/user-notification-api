@@ -24,6 +24,7 @@ ext {
 dependencies {
 
     // --- Spring Starter ---
+
     // Spring Actuator
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
@@ -35,12 +36,17 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
     // --- Spring Cloud ---
+
     // Config Client
     implementation 'org.springframework.cloud:spring-cloud-starter-config'
     // Eureka
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+    // Kafka
+    testImplementation 'org.springframework.kafka:spring-kafka-test'
+    implementation 'org.springframework.kafka:spring-kafka'
 
     // --- Database ---
+
     // PSQL
     runtimeOnly 'org.postgresql:postgresql'
 

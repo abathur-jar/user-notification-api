@@ -17,6 +17,8 @@ public class UserEventConsumer {
         String subject;
         String text;
 
+        System.out.println("Пришло сообщение с Кафки!");
+
         if (event.getOperation().equals("CREATE")) {
             subject = "user-notification-api: Аккаунт создан!";
             text = "Здравствуйте! Ваш аккаунт был успешно создан!";
