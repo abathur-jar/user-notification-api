@@ -83,3 +83,11 @@ dependencyManagement {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+test {
+    testLogging {
+        events "passed", "skipped", "failed"
+        showStandardStreams = true  // ← ЭТА СТРОКА ПОКАЗЫВАЕТ System.out
+        exceptionFormat = "full"    // ← ПОЛНЫЙ СТЕКТРЕЙС ПРИ ОШИБКАХ
+    }
+}

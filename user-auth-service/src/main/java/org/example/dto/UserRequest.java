@@ -20,7 +20,7 @@ public class UserRequest {
     @NotBlank(message = "Некорректный email!")
     private String email;
 
-    // констуктор для тестов
+    // конструктор для тестов
     public UserRequest(String firstName, String lastName, String email) {
         this.firstName = firstName;
         this.lastName = lastName;
