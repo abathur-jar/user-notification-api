@@ -11,7 +11,6 @@ import org.example.util.JwtUtil;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -45,21 +44,18 @@ public class AuthService {
 
     public AuthResponse loginUser(String email, String password) {
         try {
-//            final Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
-            if (passwordEncoder.matches(userRepository.findByEmail(email).get().getPassword(), password)) {
+                authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
 
                 final String accessToken = jwtUtil.generateAccessToken(email);
                 final String refreshToken = jwtUtil.generateRefreshToken(email);
 
                 return new AuthResponse(accessToken, refreshToken, "Bearer");
-            }
 
         } catch (BadCredentialsException e) {
             throw new RuntimeException("Неверный email или пароль!");
         } catch (AuthenticationException e) {
             throw new RuntimeException("Ошибка аутентификации: " + e.getMessage());
         }
-        return null;
     }
 
     public AuthResponse refreshTokens(String refreshToken) {
