@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: user-auth-service
+  config:
+    import: optional:configserver:http://localhost:8888
+
+# 4. Security JWT
+security:
+  jjwt: af80e81a361ed155f4334ba3903fd952cfa2018a13158e45b42612e19af67511

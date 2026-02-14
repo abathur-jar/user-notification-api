@@ -1,0 +1,28 @@
+security:
+  jjwt: a990baaf02b0eeeb907047f52e7d8f4fbd641ef2263870c3134ea783592b7edf
+
+server:
+  port: 8083
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: true
+
+spring:
+  main:
+    web-application-type: reactive
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: user-auth-service
+              uri: http://localhost:8089
+#              uri: lb://user-auth-service
+              predicates:
+                - Path=/auth/** , /users/**
+
+
+

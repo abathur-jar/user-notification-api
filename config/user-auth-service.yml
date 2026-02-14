@@ -1,0 +1,45 @@
+# 1. Server
+server:
+  port: 8089
+
+# 2. Spring
+spring:
+  # 2.1 Database
+  datasource:
+    url: jdbc:postgresql://localhost:5432/userdb
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  # 2.2 Jpa
+  jpa:
+    hibernate:
+      ddl-auto: update
+      show-sql: true
+  # 2.3 Jackson (JSON)
+  jackson:
+    deserialization:
+      fail-on-unknown-properties: true
+  # 2.4 Kafka
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.trusted.packages: "org.example.dto"
+
+
+# 3. Management (Actuator)
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, prometheus
+  endpoint:
+    health:
+      show-details: always
+
+
+
+
+
