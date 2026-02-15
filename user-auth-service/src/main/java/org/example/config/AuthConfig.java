@@ -19,7 +19,10 @@ public class AuthConfig {
                 .authorizeHttpRequests(auth -> auth
 //                        .requestMatchers("/auth/**").permitAll()
 //                        .requestMatchers("/users/**").authenticated()
-                                .anyRequest().permitAll())
+                                .anyRequest().permitAll()).exceptionHandling(e -> e
+                        .authenticationEntryPoint((req, res, ex) -> res.sendError(401))
+                        .accessDeniedHandler((req, res, ex) -> res.sendError(403))
+                )
 
                 .build();
     }
