@@ -124,4 +124,26 @@ public class BaseTestRest {
                 .body("tokenType", equalTo("Bearer"));
     }
 
+    @Test
+    @DisplayName("Login User Not Authorization")
+    public void loginUser_isNotAuthorization() {
+        String email = "login" + UUID.randomUUID() + "@gmail.com";
+        String password = "123456789";
+
+        String jsonRequest = String.format("""
+                {
+                "email": "%s",
+                "password": "%s"
+                }
+                """, email, password);
+
+        given()
+                .contentType(ContentType.JSON)
+                .body(jsonRequest)
+                .when()
+                .post("/login")
+                .then()
+                .statusCode(401);
+    }
+
 }
