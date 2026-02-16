@@ -16,6 +16,7 @@ import java.util.UUID;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -29,6 +30,12 @@ public class BaseTestRest {
     public void setUp() {
         RestAssured.port = port;
         RestAssured.basePath = "/auth";
+    }
+
+    // для проверки CI
+    @Test
+    void shouldFail() {
+        assertEquals(1, 2);
     }
 
     @Test
