@@ -1,51 +1,27 @@
-# Название workflow (как будет отображаться во вкладке Actions)
 name: Java CI with Gradle
 
-# Когда запускать?
 on:
-  # 1. Когда кто-то пушит изменения в main
   push:
-    branches: [ "main" ]
-
-  # 2. Когда создаётся или обновляется Pull Request в main
-  # (самый важный триггер для нормального CI)
   pull_request:
-    branches: [ "main" ]
 
 jobs:
   build:
-
-    # На какой системе запускать?
-    # GitHub создаёт виртуальную Ubuntu-машину
     runs-on: ubuntu-latest
 
-    # Разрешения workflow
-    permissions:
-      contents: read  # может читать репозиторий
-
     steps:
-      # 1. Скачать твой код в виртуальную машину
       - uses: actions/checkout@v4
 
-      # 2. Установить Java 17
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
 
-      # 3. Настроить Gradle + кеширование зависимостей
-      # Это ускоряет повторные сборки
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      # настройка для windows, вместо Linux
       - name: Make gradlew executable
         run: chmod +x gradlew
 
-      # 4. Собрать проект
-      # ./gradlew build = компиляция + запуск тестов
       - name: Build with Gradle Wrapper
         run: ./gradlew build
-
-
