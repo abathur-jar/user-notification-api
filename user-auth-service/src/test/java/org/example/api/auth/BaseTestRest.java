@@ -3,25 +3,29 @@ package org.example.api.auth;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.example.dto.RegisterRequest;
+import org.example.service.UserEventProducer;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.util.UUID;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
 
-
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+properties = "spring.cloud.config.enabled=false")
 @ActiveProfiles("test")
 public class BaseTestRest {
+
+    @MockitoBean
+    protected UserEventProducer userEventProducer;
 
     @LocalServerPort
     private int port;
@@ -32,11 +36,28 @@ public class BaseTestRest {
         RestAssured.basePath = "/auth";
     }
 
-    // для проверки CI
     @Test
-    void shouldFail() {
-        assertEquals(1, 2);
-    }
+     void register_Sends_EventsInKafka() {
+
+        String email = "user" + UUID.randomUUID() + "@example.com";
+
+        RegisterRequest request = new RegisterRequest(
+                "Ivan",
+                "Ivanov",
+                email,
+                "123456789",
+                "+79998887766");
+
+        given()
+                .contentType(ContentType.JSON)
+                .body(request)
+                .when()
+                .post("/register")
+                .then()
+                .statusCode(200);
+
+        verify(userEventProducer).sendUserEvent(any());
+     }
 
     @Test
     @DisplayName("Success register user!")

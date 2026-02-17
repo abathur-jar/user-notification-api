@@ -1,9 +1,11 @@
 package org.example.integration.base;
 
+import org.example.service.UserEventProducer;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -11,7 +13,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @Testcontainers
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
-public class BaseIntegrationTest {
+public abstract class BaseIntegrationTest {
 
     @Container
     static final PostgreSQLContainer<?> postgres =
@@ -28,4 +30,6 @@ public class BaseIntegrationTest {
 //        registry.add("spring.jpa.hibernate.ddl-auto", () -> "create-drop");
 //        registry.add("spring.jpa.show-sql", () -> true);
     }
+
+
 }
