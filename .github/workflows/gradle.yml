@@ -3,43 +3,47 @@ name: Java CI with Gradle
 
 # Когда запускать CI
 on:
-  # 1️⃣ При любом push (в любую ветку)
+  # При любом push (в любую ветку)
   push:
-
-  # 2️⃣ При создании или обновлении Pull Request
+  # При создании/обновлении Pull Request
   pull_request:
 
 jobs:
   build:
-    # GitHub создаёт временную Ubuntu-машину
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ Скачать код репозитория в виртуальную машину
+      # 1) Скачать код репозитория на runner
       - uses: actions/checkout@v4
 
-      # 2️⃣ Установить Java 17
-      # Без этого Gradle не сможет собрать проект
+      # 2) Установить Java 17
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
 
-      # 3️⃣ Настроить Gradle + включить кеширование зависимостей
-      # Это ускоряет последующие сборки
+      # 3) Настроить Gradle + кеш зависимостей
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      # 4️⃣ Дать права на выполнение gradlew
-      # В Linux файл может быть неисполняемым
+      # 4) Дать права на gradlew (на Linux это важно)
       - name: Make gradlew executable
-        run: chmod +x gradlew
+        run: chmod +x ./gradlew
 
-      # 5️⃣ Собрать проект
-      # ./gradlew build =
-      #   - компиляция
-      #   - запуск тестов
-      # Если тест упадёт → CI станет красным ❌
-      - name: Build with Gradle Wrapper
-        run: ./gradlew build
+      # 5) Быстрая сборка без тестов (компиляция)
+      - name: Build (without tests)
+        run: ./gradlew assemble
+
+      # 6) Запуск тестов (если упадут — CI станет красным)
+      - name: Run tests
+        run: ./gradlew test --info --stacktrace
+
+      # 7) Загрузить HTML отчёт тестов, даже если тесты упали
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports
+          path: |
+            **/build/reports/tests/test/
