@@ -2,8 +2,11 @@ package org.example.api.auth;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import org.example.dto.AuthResponse;
+import org.example.dto.LoginRequest;
 import org.example.dto.RegisterRequest;
 import org.example.service.UserEventProducer;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,7 +19,6 @@ import java.util.UUID;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.notNullValue;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
@@ -56,7 +58,7 @@ public class BaseTestRest {
                 .then()
                 .statusCode(200);
 
-        verify(userEventProducer).sendUserEvent(any());
+        verify(userEventProducer, times(1)).sendUserEvent(any());
      }
 
     @Test
@@ -133,41 +135,36 @@ public class BaseTestRest {
                                 .then()
                                         .statusCode(200);
 
-        String loginJson = String.format("""
-                {
-                    "email": "%s",
-                    "password": "%s"
-                }
-                """, email, password);
+        LoginRequest loginRequest = new LoginRequest(email, password);
 
-        given()
+        final AuthResponse response = given()
                 .contentType(ContentType.JSON)
-                .body(loginJson)
+                .body(loginRequest)
                 .when()
                 .post("/login")
                 .then()
                 .statusCode(200)
-                .body("accessToken", notNullValue())
-                .body("refreshToken", notNullValue())
-                .body("tokenType", equalTo("Bearer"));
+                .extract()
+                .as(AuthResponse.class);
+
+        Assertions.assertNotNull(response.accessToken());
+        Assertions.assertNotNull(response.refreshToken());
+        Assertions.assertNotNull(response.tokenType());
+        Assertions.assertEquals("Bearer", response.tokenType());
     }
 
     @Test
     @DisplayName("Login User Not Authorization")
     public void loginUser_isNotAuthorization() {
+
         String email = "login" + UUID.randomUUID() + "@gmail.com";
         String password = "123456789";
 
-        String jsonRequest = String.format("""
-                {
-                "email": "%s",
-                "password": "%s"
-                }
-                """, email, password);
+        LoginRequest loginRequest = new LoginRequest(email, password);
 
         given()
                 .contentType(ContentType.JSON)
-                .body(jsonRequest)
+                .body(loginRequest)
                 .when()
                 .post("/login")
                 .then()
