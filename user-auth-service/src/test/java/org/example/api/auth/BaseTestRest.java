@@ -24,6 +24,7 @@ import static org.mockito.Mockito.*;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
 properties = "spring.cloud.config.enabled=false")
 @ActiveProfiles("test")
+
 public class BaseTestRest {
 
     @MockitoBean
